@@ -1,3 +1,6 @@
+//AirBuddi1
+//SPM1
+
 #include "bsec.h"
 #include <Wire.h>
 #include <HardwareSerial.h>
@@ -12,7 +15,7 @@
 #include "esp_mac.h"
 #include <Preferences.h>
 
-#define AWS_IOT_PUBLISH_TOPIC   "esp32/pub"
+#define AWS_IOT_PUBLISH_TOPIC   "SPM1"
 //#define AWS_IOT_SUBSCRIBE_TOPIC "esp32/sub"
 //String id;
 String mac = "";
@@ -103,26 +106,14 @@ TaskHandle_t AWSTaskHandle;
 
 void connectAWS()
 {
-//  WiFi.mode(WIFI_STA);
-//  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
   Serial.println("Connecting to Wi-Fi");
-//  while (WiFi.status() != WL_CONNECTED)
-//  {
-//    delay(500);
-//    Serial.print(".");
-//  }
-//  vTaskResume(AWSTaskHandle);
-  // Configure WiFiClientSecure to use the AWS IoT device credentials
   net.setCACert(AWS_CERT_CA);
   net.setCertificate(AWS_CERT_CRT);
   net.setPrivateKey(AWS_CERT_PRIVATE);
  
   // Connect to the MQTT broker on the AWS endpoint we defined earlier
   client.setServer(AWS_IOT_ENDPOINT, 8883);
- 
-  // Create a message handler
-//  client.setCallback(messageHandler);
- 
+  
   Serial.println("Connecting to AWS IOT");
  
   while (!client.connect(THINGNAME))
@@ -315,23 +306,12 @@ void publishMessage()
   client.publish(AWS_IOT_PUBLISH_TOPIC, jsonBuffer);
 }
  
-//void messageHandler(char* topic, byte* payload, unsigned int length)
-//{
-//  Serial.print("incoming: ");
-//  Serial.println(topic);
-// 
-//  StaticJsonDocument<200> doc;
-//  deserializeJson(doc, payload);
-//  const char* message = doc["message"];
-//  Serial.println(message);
-//}
 
 void loop(){
   
 }
 
 // Task functions
-//OK
 void bmeTask(void *pvParameters) {
     pinMode(LED_BUILTIN, OUTPUT);
     iaqSensor.begin(BME68X_I2C_ADDR_LOW, Wire);
@@ -398,7 +378,6 @@ void bmeTask(void *pvParameters) {
   }
 }
 
-//OK
 void hpmaTask(void *pvParameters) {
   HPMA115S0.begin(9600, SERIAL_8N1, RXD2, TXD2);
   while (!HPMA115S0);
@@ -427,7 +406,6 @@ void hpmaTask(void *pvParameters) {
   }
 }
 
-//OK
 void ledTask(void *pvParameters) {
   while (1) {
     int lm = 0;  // LED Matrix
@@ -455,7 +433,6 @@ void ledTask(void *pvParameters) {
   }
 }
 
-//OK
 void displayTask(void *pvParameters) {
   while (1) {
     long g;
@@ -574,72 +551,9 @@ void AWSTask(void *pvParameters) {
       return;
     }
 
-//  Serial.print(F("Humidity: "));                      change accordingly
-//  Serial.print(h);
-//  Serial.print(F("%  Temperature: "));
-//  Serial.print(t);
-//  Serial.println(F("°C ")); 
   publishMessage();
   client.loop();
 //  delay(1000);
     vTaskDelay(1000/portTICK_PERIOD_MS);
   }
 }
-/// Function to connect to WiFi using saved credentials
-//bool connectToSavedWiFi(Preferences &preferences) {
-//    String ssid = preferences.getString("ssid", "");
-//    String password = preferences.getString("password", "");
-//
-//    if (ssid.length() > 0 && password.length() > 0) {
-//        WiFi.begin(ssid.c_str(), password.c_str());
-//
-//        Serial.print("Connecting to ");
-//        Serial.print(ssid);
-//
-//        // Wait for connection (10 seconds timeout)
-//        unsigned long startTime = millis();
-//        while (WiFi.status() != WL_CONNECTED && millis() - startTime < 10000) {
-//            delay(500);
-//            Serial.print(".");
-//        }
-//        Serial.println();
-//
-//        if (WiFi.status() == WL_CONNECTED) {
-//            Serial.println("Connected to saved WiFi!");
-//            return true;
-//        } else {
-//            Serial.println("Failed to connect to saved WiFi");
-//            return false;
-//        }
-//    }
-//    return false;
-//}
-
-//void WifiManagerTask(void *pvParameters) {
-//    Preferences preferences;
-//    preferences.begin("wifiCreds", false); // Open NVS namespace "wifiCreds"
-//
-//    if (!connectToSavedWiFi(preferences)) {
-//        WiFi.mode(WIFI_STA);
-//        WiFiManager wm;
-//
-//        // Try to connect using WiFiManager
-//        bool res = wm.autoConnect("AirBuddi", "password");
-//        if (!res) {
-//            Serial.println("Failed to connect");
-//        } else {
-//            Serial.println("Connected...yeey :)");
-//
-//            // Save the new WiFi credentials
-//            preferences.putString("ssid", WiFi.SSID());
-//            preferences.putString("password", WiFi.psk());
-//            Serial.println("New WiFi credentials saved");
-//        }
-//    }
-//
-//    preferences.end(); // Close NVS
-//    vTaskDelete(NULL);
-//}
-//
-//// To start the task:
-//// xTaskCreate(WifiManagerTask, "WifiManagerTask", 8192, NULL, 1, NULL);

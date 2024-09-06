@@ -4,7 +4,7 @@
 #define THINGNAME "aqi_monitor_noida"                         //change this
  
 //const char WIFI_SSID[] = "Ritu Raj";               //change this
-//const char WIFI_PASSWORD[] = "ekseaath";           //change this
+//const char WIFI_PASSWORD[] = "*******";           //change this
 const char AWS_IOT_ENDPOINT[] = "a1qe87k6xy75k4-ats.iot.eu-north-1.amazonaws.com";       //change this
  
 // Amazon Root CA 1
