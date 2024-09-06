@@ -152,7 +152,8 @@ void checkIaqSensorStatus(void)
       Serial.println(output);
       for (;;)
         errLeds(); /* Halt in case of failure */
-    } else {
+    }
+    else {
       output = "BSEC warning code : " + String(iaqSensor.bsecStatus);
       Serial.println(output);
     }
@@ -164,7 +165,8 @@ void checkIaqSensorStatus(void)
       Serial.println(output);
       for (;;)
         errLeds(); /* Halt in case of failure */
-    } else {
+    }
+    else {
       output = "BME68X warning code : " + String(iaqSensor.bme68xStatus);
       Serial.println(output);
     }
@@ -500,57 +502,48 @@ void displayTask(void *pvParameters) {
 }
 
 void WifiManagerTask(void *pvParameters){
-    WiFi.mode(WIFI_STA);
-    WiFiManager wm;
-    wm.resetSettings();
-    bool res;
-    res = wm.autoConnect("AirBuddi","password");
-    if(!res) {
-        Serial.println("Failed to connect");
-    } 
-    else {
-        Serial.println("connected...yeey :)");
-    }
+  WiFi.mode(WIFI_STA);
+  WiFiManager wm;
+  wm.resetSettings();
+  bool res;
+  res = wm.autoConnect("AirBuddi","password");
+  if(!res) {
+    Serial.println("Failed to connect");
+  } 
+  else {
+    Serial.println("connected...yeey :)");
+  }
     
 }
 
 void AWSTask(void *pvParameters) {
   connectAWS();
   while(1){
-    //  h = dht.readHumidity();                          your function will give data to this variable
-    //  t = dht.readTemperature();
  
- 
-  if (isnan(pressure) || isnan(temperature) || isnan(Humidity) ||isnan(Gasresistance) ||isnan(IAQ) ||isnan(Co2) ||isnan(Vocs) )  // Check if any reads failed and exit early (to try again).
-  {
-    Serial.println(F("Failed to read from DHT sensor!"));
-    return;
-  }
-  
-//  Serial.print(F("Humidity: "));                      change accordingly
-//  Serial.print(h);
-//  Serial.print(F("%  Temperature: "));
-//  Serial.print(t);
-//  Serial.println(F("°C ")); 
- 
-  publishMessage();
-  client.loop();
-  delay(1000);
+    if (isnan(pressure) || isnan(temperature) || isnan(Humidity) ||isnan(Gasresistance) ||isnan(IAQ) ||isnan(Co2) ||isnan(Vocs) )  // Check if any reads failed and exit early (to try again).
+    {
+      Serial.println(F("Failed to read from DHT sensor!"));
+      return;
+    }
+
+    publishMessage();
+    client.loop();
+    delay(1000);
   }
 }
  
 void publishMessage()
 {
   StaticJsonDocument<200> doc;
-       doc["IAQ"] = IAQ;
-    doc["Humidity"] = Humidity;
-    doc["PM 2.5"] = PM25;
-    doc["PM 10"] = PM10;
-    doc["Temperature"] = temperature;
-    doc["Pressure"] = pressure;
-    doc["C02 Equivalent"] = Co2;
-    doc["VOC's"]= Vocs;
-    doc["Gas Resistance"] = Gasresistance;
+  doc["IAQ"] = IAQ;
+  doc["Humidity"] = Humidity;
+  doc["PM 2.5"] = PM25;
+  doc["PM 10"] = PM10;
+  doc["Temperature"] = temperature;
+  doc["Pressure"] = pressure;
+  doc["C02 Equivalent"] = Co2;
+  doc["VOC's"]= Vocs;
+  doc["Gas Resistance"] = Gasresistance;
    
   char jsonBuffer[512];
   serializeJson(doc, jsonBuffer); // print to client
@@ -569,9 +562,4 @@ void messageHandler(char* topic, byte* payload, unsigned int length)
   Serial.println(message);
 }
 
-
-
-
-void loop(){
-  
-}
+void loop(){}
